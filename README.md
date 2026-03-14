@@ -100,7 +100,3 @@ Just create a new file in `plugins/` starting with `plugin_` and add a `register
 - [OpenAI Function Calling docs](https://platform.openai.com/docs/guides/function-calling)
 - [sqlmap](https://sqlmap.org/)
 - [nmap](https://nmap.org/)
-
-## License
-
-Apache 2.0
