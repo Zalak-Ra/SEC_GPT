@@ -1,0 +1,6 @@
+# requirements for SecGPT
+# install with: pip install -r requirements.txt
+openai
+pyyaml
+requests
+tiktoken
