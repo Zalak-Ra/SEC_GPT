@@ -1,7 +1,5 @@
 # SecGPT - Autonomous AI Security Testing Agent
 
-**CS450 Final Year Project**
-
 ## What is this?
 
 SecGPT is an AI agent that can do basic security testing on websites automatically. You give it a target URL and a goal (like "find SQL injection vulnerabilities"), and it figures out which tools to run, runs them, reads the results, and decides what to do next. It keeps going until it's done and writes a report.
