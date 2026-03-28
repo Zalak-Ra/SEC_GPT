@@ -19,8 +19,6 @@ import yaml
 import tiktoken
 from openai import OpenAI
 
-# ============ CONFIG ============
-# just hardcode stuff here, easier than making a whole config module
 API_KEY = os.getenv("OPENAI_API_KEY", "")
 MODEL = os.getenv("MODEL", "gpt-4o")
 MAX_TOKENS = 4096
@@ -29,7 +27,6 @@ TOKEN_LIMIT = 8000  # when to summarize old messages
 WORKSPACE = "workspace"  # where the agent reads/writes files
 
 # load from yaml config if env var not set
-# this is kinda redundant but whatever, belt and suspenders
 if not API_KEY:
     try:
         with open("config/config.yaml", "r") as f:
@@ -55,8 +52,6 @@ try:
 except:
     enc = tiktoken.get_encoding("cl100k_base")
 
-
-# ============ PLUGIN LOADING ============
 # scans the plugins folder for any file starting with "plugin_"
 # each plugin just needs a register() function that returns a dict
 
@@ -127,9 +122,6 @@ def run_plugin(name, args):
     except Exception as e:
         return f"Error running {name}: {e}"
 
-
-# ============ MEMORY / MESSAGES ============
-# keeps track of conversation history and does summarization
 # when it gets too long (otherwise we blow the context window)
 
 system_prompt = ""
@@ -200,9 +192,7 @@ def summarize_if_needed():
     print(f"[INFO] Compressed {len(old)} old messages into 1 summary")
 
 
-# ============ CHARACTER CREATION ============
 # the agent generates a "character" for itself based on the user's goal
-# this is inspired by AutoGPT's character system
 
 def load_character_template():
     with open("prompts/character.yaml", "r") as f:
@@ -239,7 +229,6 @@ def create_character():
         sys.exit(1)
 
     # parse name/description/goals from the response
-    # this regex stuff is a bit fragile but it works for now
     import re
     name_m = re.search(r"Name\s*:\s*(.*)", text, re.IGNORECASE)
     desc_m = re.search(r"Description\s*:\s*(.*?)(?:\n|Goals)", text, re.IGNORECASE | re.DOTALL)
@@ -277,8 +266,6 @@ def load_saved_character():
     return None
 
 
-# ============ PROMPT BUILDING ============
-
 def build_system_prompt(char_info):
     """Assemble the system prompt from character info + yaml files"""
     parts = []
@@ -308,9 +295,6 @@ def build_system_prompt(char_info):
     prompt = "\n".join(parts)
     prompt += "\nAlways respond by calling exactly one tool. Never respond with plain text.\n"
     return prompt
-
-
-# ============ MAIN AGENT LOOP ============
 
 USER_PROMPT = (
     "Determine the single best next action to take toward completing your goals. "
@@ -403,16 +387,10 @@ def agent_loop():
         # check if we need to summarize
         summarize_if_needed()
 
-
-# ============ ENTRY POINT ============
-
 def main():
     global system_prompt, messages
 
-    print("=" * 50)
     print("  SecGPT - AI Security Testing Agent")
-    print("  CS450 Final Year Project")
-    print("=" * 50)
 
     # load plugins
     load_plugins()
